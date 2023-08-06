@@ -1,0 +1,50 @@
+import express, { json } from "express";
+import mongoose from "mongoose";
+import multer from "multer";
+import { userController } from "./controllers/controllers.js";
+import "dotenv/config";
+
+const SERVER_PASSWORD = process.env.SERVER_PASSWORD;
+
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(
+    `mongodb+srv://${SERVER_PASSWORD}@cluster0.c7q6vtk.mongodb.net/streetwear`
+  )
+  .then(() => console.log("Db work"))
+  .catch((err) => console.log("Db error", err));
+
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const app = express();
+
+// const upload = multer({ storage });
+const port = 8000;
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to my Server",
+  });
+});
+
+app.post("/register", userController.register);
+app.post("/login", userController.login);
+app.get("/getUser", userController.getUser);
+
+
+
+app.listen(port, (err) => {
+  if (err) {
+    return console.log(err);
+  }
+  console.log("server work");
+});
