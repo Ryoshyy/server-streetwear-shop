@@ -2,26 +2,36 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    fullname: {
-      type: "string",
+
+    firstname: {
+      type: String,
       required: true,
     },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    dateOfBirth: {
+      type: Date,
+      min: '1987-09-28',
+      max: new Date().now,
+    },
     email: {
-      type: "string",
+      type: String,
       required: true,
       unique: true,
     },
     phoneNumber: {
-      type: "string",
+      type: String,
       required: true,
       unique: true,
     },
     address: {
-      type: "string",
+      type: String,
       required: true,
     },
     passwordHash: {
-      type: "string",
+      type: String,
       required: true,
     },
     avatarUrl: String,
@@ -29,4 +39,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);

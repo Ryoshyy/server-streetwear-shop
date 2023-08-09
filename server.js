@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 import multer from "multer";
 import { userController } from "./controllers/controllers.js";
 import "dotenv/config";
+import cors from "cors";
+import { checkAuth} from "./utils/utils.js";
+
+
 
 const SERVER_PASSWORD = process.env.SERVER_PASSWORD;
 
@@ -27,8 +31,9 @@ const app = express();
 
 // const upload = multer({ storage });
 const port = 8000;
-
 app.use(express.json());
+app.use(cors());
+
 
 app.get("/", (req, res) => {
   res.json({
@@ -36,9 +41,11 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/register", userController.register);
-app.post("/login", userController.login);
+app.post("/auth/register", userController.register);
+app.post("/auth/login", userController.login);
 app.get("/getUser", userController.getUser);
+app.get("/auth/me", checkAuth, userController.getMe);
+
 
 
 

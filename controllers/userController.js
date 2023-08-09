@@ -9,7 +9,9 @@ export const register = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
 
     const doc = new userModel({
-      fullname: req.body.fullname,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      dateOfBirth: req.body.dateOfBirth,
       email: req.body.email,
       passwordHash: hash,
       address: req.body.address,
@@ -90,6 +92,27 @@ export const getUser = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: "Couldn't get users",
+    });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({
+        massage: "User not found",
+      });
+    }
+    const { passwordHash, ...userData } = user._doc;
+
+    res.json({
+      ...userData,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      massage: "err",
     });
   }
 };
