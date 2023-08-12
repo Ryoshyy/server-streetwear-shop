@@ -1,12 +1,13 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import multer from "multer";
-import { userController } from "./controllers/controllers.js";
+import {
+  userController,
+  productController,
+} from "./controllers/controllers.js";
 import "dotenv/config";
 import cors from "cors";
-import { checkAuth} from "./utils/utils.js";
-
-
+import { checkAuth } from "./utils/utils.js";
 
 const SERVER_PASSWORD = process.env.SERVER_PASSWORD;
 
@@ -34,7 +35,6 @@ const port = 8000;
 app.use(express.json());
 app.use(cors());
 
-
 app.get("/", (req, res) => {
   res.json({
     message: "Welcome to my Server",
@@ -46,8 +46,13 @@ app.post("/auth/login", userController.login);
 app.get("/getUser", userController.getUser);
 app.get("/auth/me", checkAuth, userController.getMe);
 
-
-
+app.post("/createProduct", checkAuth, productController.create);
+app.get("/products", productController.getAll);
+app.delete("/product/:id", productController.remove);
+app.put(
+  "/product/:id",
+  productController.update
+);
 
 app.listen(port, (err) => {
   if (err) {
